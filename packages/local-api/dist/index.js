@@ -27,22 +27,3 @@ var serve = function (port, filename, dir, useProxy) {
     });
 };
 exports.serve = serve;
-var serve = function (port, filename, dir, useProxy) {
-    var app = express_1.default();
-    app.use(cells_1.createCellsRouter(filename, dir));
-    if (useProxy) {
-        app.use(http_proxy_middleware_1.createProxyMiddleware({
-            target: "http://localhost:3000",
-            ws: true,
-            logLevel: "silent",
-        }));
-    }
-    else {
-        var packagePath = require.resolve("local-client/build/index.html");
-        app.use(express_1.default.static(path_1.default.dirname(packagePath)));
-    }
-    return new Promise(function (resolve, reject) {
-        app.listen(port, resolve).on("error", reject);
-    });
-};
-exports.serve = serve;
